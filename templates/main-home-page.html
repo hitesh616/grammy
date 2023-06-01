@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Main Home Page</title>
+    <style>
+        /* CSS for the page layout */
+        body {
+            background-image: url('/static/images/widestage.jpg');
+            background-size: cover;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .search-bar {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 10px;
+            width: 400px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: none;
+            outline: none;
+        }
+
+        .container {
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        /* CSS for the concert card */
+        .concert-card {
+            width: 200px;
+            height: 350px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            padding: 10px;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: auto;
+        }
+
+        .concert-card:hover {
+            transform: scale(1.05);
+        }
+
+        .concert-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .concert-details {
+            margin-top: 10px;
+        }
+
+        .concert-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .concert-info {
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 5px;
+        }
+
+        /* CSS for the concert data popup */
+        .concert-data-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 999;
+        }
+
+        .concert-data-popup.show {
+            display: block;
+        }
+
+        .concert-data-popup h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .concert-data-popup p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .concert-data-popup button {
+            padding: 8px 16px;
+            background-color: #00cc66;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .concert-data-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+        }
+
+        .concert-data-popup-overlay.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="header-logo">
+            <img src="/static/images/logo.png" alt="Logo" width="100" height="100">
+            Concerts
+        </h1>
+        <div class="search-bar">
+            <input type="text" placeholder="Search...">
+        </div>
+    </div>
+
+    <div class="container">
+        {% for concert in concerts %}
+        <div class="concert-card" onclick="showConcertData(this)">
+            <img class="concert-image" src="data:image/jpeg;base64,{{ concert[2]|b64encode }}" alt="Concert Poster">
+            <div class="concert-details">
+                <h3 class="concert-name">{{ concert[1] }}</h3>
+                <p class="concert-info">Venue: {{ concert[3] }}</p>
+                <p class="concert-info">Date: {{ concert[4] }}</p>
+                <p class="concert-info">Time: {{ concert[5] }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="concertDataPopup" class="concert-data-popup">
+        <h2>Concert Details</h2>
+        <p id="concertName"></p>
+        <p id="concertVenue"></p>
+        <p id="concertDate"></p>
+        <p id="concertTime"></p>
+        <button onclick="hideConcertData()">Close</button>
+    </div>
+
+    <div id="concertDataPopupOverlay" class="concert-data-popup-overlay"></div>
+
+    <script>
+        // JavaScript function to show the concert data popup
+        function showConcertData(concertCard) {
+            var concertDataPopup = document.getElementById('concertDataPopup');
+            var concertDataPopupOverlay = document.getElementById('concertDataPopupOverlay');
+            var nameElement = document.getElementById('concertName');
+            var venueElement = document.getElementById('concertVenue');
+            var dateElement = document.getElementById('concertDate');
+            var timeElement = document.getElementById('concertTime');
+
+            var concertImage = concertCard.querySelector('.concert-image');
+            var concertName = concertCard.querySelector('.concert-name').textContent;
+            var concertVenue = concertCard.querySelector('.concert-info:nth-child(2)').textContent.replace('Venue: ', '');
+            var concertDate = concertCard.querySelector('.concert-info:nth-child(3)').textContent.replace('Date: ', '');
+            var concertTime = concertCard.querySelector('.concert-info:nth-child(4)').textContent.replace('Time: ', '');
+
+            nameElement.textContent = concertName;
+            venueElement.textContent = 'Venue: ' + concertVenue;
+            dateElement.textContent = 'Date: ' + concertDate;
+            timeElement.textContent = 'Time: ' + concertTime;
+
+            concertDataPopup.classList.add('show');
+            concertDataPopupOverlay.classList.add('show');
+
+            // Blur other concert cards
+            var concertCards = document.getElementsByClassName('concert-card');
+            for (var i = 0; i < concertCards.length; i++) {
+                if (concertCards[i] !== concertCard) {
+                    concertCards[i].style.filter = 'blur(4px)';
+                }
+            }
+
+            // Disable click on other concert cards
+            for (var i = 0; i < concertCards.length; i++) {
+                concertCards[i].onclick = function () {
+                    return false;
+                };
+            }
+
+            // Enable click on the selected concert card
+            concertCard.onclick = function () {
+                hideConcertData();
+                return false;
+            };
+
+            // Hide concert data popup on overlay click
+            concertDataPopupOverlay.onclick = function () {
+                hideConcertData();
+                return false;
+            };
+        }
+
+        // JavaScript function to hide the concert data popup
+        function hideConcertData() {
+            var concertDataPopup = document.getElementById('concertDataPopup');
+            var concertDataPopupOverlay = document.getElementById('concertDataPopupOverlay');
+
+            concertDataPopup.classList.remove('show');
+            concertDataPopupOverlay.classList.remove('show');
+
+            // Restore other concert cards
+            var concertCards = document.getElementsByClassName('concert-card');
+            for (var i = 0; i < concertCards.length; i++) {
+                concertCards[i].style.filter = 'none';
+            }
+
+            // Enable click on all concert cards
+            for (var i = 0; i < concertCards.length; i++) {
+                concertCards[i].onclick = function () {
+                    showConcertData(this);
+                    return false;
+                };
+            }
+        }
+    </script>
+</body>
+</html>
