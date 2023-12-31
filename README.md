@@ -1,31 +1,85 @@
-# grammy
+# Grammy Application
 
-### To host this application you need to install some packges and need to configure database mysql database on instance 
+## Introduction
 
-1. you need python install on machin, install python by following command 
+Welcome to the Grammy application, a feature-rich platform for entertainment. This readme provides a step-by-step guide to help you set up and run the application on your machine.
+
+## Prerequisites
+
+Before hosting the Grammy application, ensure that the following prerequisites are installed on your machine:
+
+1. **Python:**
+   - Install Python 3 using the commands:
+
+     ```bash
      sudo apt-get update
      sudo apt-get install python3
-     
-2. create python vritual environment
+     ```
+
+2. **Virtual Environment:**
+   - Create a Python virtual environment:
+
+     ```bash
      sudo apt install python3-venv
      python3 -m venv .venv
-   activate python virtual env by  source .venv/bin/activate
+     ```
 
-3. Install flask
-    pip install flask 
+   - Activate the virtual environment:
 
-4. configure Mysql on machine
-     1. install Mysql on machine
-         sudo apt install mysql-server
-     2. check status of mysql service by
-          sudo systemctl status mysql.servic
-     3. Install mysql connector with python by
-          pip3 install mysql-connector-python
-     4.  create user name grammy in mysql and password of that user should be grammy do this by following command
-           ''' CREATE USER 'grammy'@'localhost' IDENTIFIED BY 'grammy'; '''
-     5. grant all permission to grammy user
-         GRANT ALL PRIVILEGES ON *.* TO 'grammy'@'localhost' WITH GRANT OPTION;
-     6. create databse name 'grammy' in mysql
-          CREATE DATABASE grammy;
+     ```bash
+     source .venv/bin/activate
+     ```
 
-yes now you can run flask app by command "python3 main.py"
+3. **Flask:**
+   - Install Flask:
+
+     ```bash
+     pip install flask
+     ```
+
+4. **MySQL Database:**
+   - Install MySQL:
+
+     ```bash
+     sudo apt install mysql-server
+     ```
+
+   - Check MySQL service status:
+
+     ```bash
+     sudo systemctl status mysql.service
+     ```
+
+   - Install MySQL connector for Python:
+
+     ```bash
+     pip3 install mysql-connector-python
+     ```
+
+   - Configure MySQL:
+     - Create a user 'grammy' with the password 'grammy':
+
+       ```sql
+       CREATE USER 'grammy'@'localhost' IDENTIFIED BY 'grammy';
+       ```
+
+     - Grant all privileges to the 'grammy' user:
+
+       ```sql
+       GRANT ALL PRIVILEGES ON *.* TO 'grammy'@'localhost' WITH GRANT OPTION;
+       ```
+
+     - Create a database named 'grammy':
+
+       ```sql
+       CREATE DATABASE grammy;
+       ```
+
+## Running the Application
+
+Now that you have the prerequisites, follow these steps to run the Grammy application:
+
+1. Run the Flask app:
+
+   ```bash
+   python3 main.py
